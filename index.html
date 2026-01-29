@@ -2,58 +2,9 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8" />
-  <title>感情ログ-Your Mental</title>
+  <title>感情ログ</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <style>
-    body {
-      font-family: system-ui, -apple-system, sans-serif;
-      max-width: 480px;
-      margin: 0 auto;
-      padding: 20px;
-      background: #fafafa;
-    }
-    h1 {
-      font-size: 22px;
-      margin-bottom: 16px;
-    }
-    .card {
-      background: #fff;
-      padding: 16px;
-      border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.06);
-      margin-bottom: 16px;
-    }
-    label {
-      display: block;
-      margin-top: 12px;
-      font-size: 14px;
-    }
-    select, input[type="range"], textarea, button {
-      width: 100%;
-      margin-top: 6px;
-    }
-    textarea {
-      resize: none;
-      height: 60px;
-    }
-    button {
-      margin-top: 16px;
-      padding: 12px;
-      border: none;
-      border-radius: 8px;
-      background: #111;
-      color: #fff;
-      font-size: 16px;
-    }
-    .log {
-      font-size: 14px;
-      border-bottom: 1px solid #eee;
-      padding: 8px 0;
-    }
-    .emotion {
-      font-weight: bold;
-    }
-  </style>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
@@ -78,67 +29,23 @@
 
     <label>
       ひとこと（任意）
-      <textarea id="note" placeholder="何があった？（20文字くらい）"></textarea>
+      <textarea id="note" placeholder="何があった？"></textarea>
     </label>
 
-    <button onclick="saveLog()">記録する</button>
+    <button id="saveBtn">記録する</button>
   </div>
 
   <div class="card">
-    <h2 style="font-size:16px;">履歴</h2>
+    <h2>感情の傾向（直近7件）</h2>
+    <canvas id="emotionChart" width="240" height="240"></canvas>
+    <div id="analysis" class="muted"></div>
+  </div>
+
+  <div class="card">
+    <h2>履歴</h2>
     <div id="logs"></div>
   </div>
 
-<script>
-  const STORAGE_KEY = "emotion_logs";
-
-  function getLogs() {
-    return JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
-  }
-
-  function saveLogs(logs) {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(logs));
-  }
-
-  function saveLog() {
-    const emotion = document.getElementById("emotion").value;
-    const intensity = document.getElementById("intensity").value;
-    const note = document.getElementById("note").value;
-
-    const log = {
-      date: new Date().toLocaleDateString(),
-      emotion,
-      intensity,
-      note
-    };
-
-    const logs = getLogs();
-    logs.unshift(log);
-    saveLogs(logs);
-
-    document.getElementById("note").value = "";
-    renderLogs();
-  }
-
-  function renderLogs() {
-    const logs = getLogs();
-    const container = document.getElementById("logs");
-    container.innerHTML = "";
-
-    logs.slice(0, 7).forEach(log => {
-      const div = document.createElement("div");
-      div.className = "log";
-      div.innerHTML = `
-        <div>${log.date}</div>
-        <div class="emotion">${log.emotion}（強度 ${log.intensity}）</div>
-        <div>${log.note || ""}</div>
-      `;
-      container.appendChild(div);
-    });
-  }
-
-  renderLogs();
-</script>
-
+<script src="script.js"></script>
 </body>
 </html>
